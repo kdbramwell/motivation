@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "ResoluteMan"
 
 include(":androidApp")
 include(":shared")

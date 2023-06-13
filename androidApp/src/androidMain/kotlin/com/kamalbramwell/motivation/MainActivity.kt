@@ -1,4 +1,4 @@
-package com.myapplication
+package com.kamalbramwell.motivation
 
 import MainView
 import android.os.Bundle
