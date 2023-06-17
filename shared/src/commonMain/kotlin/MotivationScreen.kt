@@ -40,6 +40,19 @@ private val photoUrls = listOf(
     "https://images.unsplash.com/photo-1672243776895-7878f5180d25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80",
 )
 
+private val photoResources = listOf(
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg",
+    "9.jpg",
+    "10.jpg"
+)
+
 private val quotes = listOf(
     "I am capable of achieving great things.",
     "I embrace positivity and radiate joy.",
@@ -71,7 +84,7 @@ interface MotivationQuote {
 
 data class MotivationQuoteData(
     override val text: String = quotes.random(),
-    override val backgroundPhoto: String = "1.jpg",
+    override val backgroundPhoto: String = photoResources.random(),
     override val isFavorite: Boolean = false
 ) : MotivationQuote
 
@@ -88,7 +101,7 @@ fun MotivationScreen(
 
     Box(modifier.fillMaxSize().background(Color.White)) {
         Image(
-            painter = painterResource("1.jpg"),
+            painter = painterResource(motivationQuote.backgroundPhoto),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alpha = 0.5f,
