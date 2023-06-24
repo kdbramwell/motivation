@@ -18,15 +18,14 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -88,16 +87,26 @@ data class MotivationQuoteData(
     override val isFavorite: Boolean = false
 ) : MotivationQuote
 
+val dummyQuotes = quotes.mapIndexed { idx, quote ->
+    MotivationQuoteData(
+        text = quote,
+        backgroundPhoto = photoResources[idx % photoResources.size],
+        isFavorite = false
+    )
+}
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MotivationScreen(
-    quote: MotivationQuote = MotivationQuoteData(),
+    quotes: List<MotivationQuote> = dummyQuotes,
     modifier: Modifier = Modifier,
+    startIndex: Int = 0,
     onFavoriteClick: (MotivationQuote) -> Unit = {},
     onShareClick: (MotivationQuote) -> Unit = {},
     onRandomClick: () -> Unit = {}
 ) {
-    var motivationQuote by mutableStateOf(quote)
+    var index by remember { mutableStateOf(startIndex) }
+    val motivationQuote by mutableStateOf(quotes[index])
 
     Box(modifier.fillMaxSize().background(Color.White)) {
         Image(
@@ -110,11 +119,9 @@ fun MotivationScreen(
         Text(
             text = motivationQuote.text,
             modifier = Modifier.align(Alignment.Center),
-            fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.h4,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            textDecoration = TextDecoration.Underline
         )
 
         Row(
@@ -122,18 +129,18 @@ fun MotivationScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onFavoriteClick(quote) }, modifier = Modifier.padding(8.dp)) {
+            IconButton(onClick = { onFavoriteClick(motivationQuote) }, modifier = Modifier.padding(8.dp)) {
                 Icon(Icons.Filled.FavoriteBorder, contentDescription = "Favorite")
             }
 
             IconButton(
-                onClick = { motivationQuote = MotivationQuoteData() },
+                onClick = { if (quotes.size-1 > index) index += 1  else index = 0 },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Icon(Icons.Filled.Refresh, contentDescription = "Randomize")
             }
 
-            IconButton(onClick = { onShareClick(quote) }, modifier = Modifier.padding(8.dp)) {
+            IconButton(onClick = { onShareClick(motivationQuote) }, modifier = Modifier.padding(8.dp)) {
                 Icon(Icons.Filled.Share, contentDescription = "Share")
             }
         }
